@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/BambiCPT/pokedexcli/internal/pokecache"
 )
 
 type Location struct {
@@ -21,10 +23,18 @@ type LocationResponse struct {
 type Config struct {
 	NextURL string
 	PrevURL string
+	Cache   *pokecache.Cache
 }
 
-func getLocations(URL string) (LocationResponse, error) {
+func getLocations(cfg *Config, URL string) (LocationResponse, error) {
 	var locationData LocationResponse
+
+	if cachedData, found := cfg.Cache.Get(URL); found {
+		if err := json.Unmarshal(cachedData, &locationData); err == nil {
+			return locationData, nil
+		}
+	}
+
 	res, err := http.Get(URL)
 	if err != nil {
 		return locationData, err
@@ -36,11 +46,18 @@ func getLocations(URL string) (LocationResponse, error) {
 		return locationData, err
 	}
 
+	if cfg.Cache != nil {
+		cachedJSON, err := json.Marshal(locationData)
+		if err == nil {
+			cfg.Cache.Add(URL, cachedJSON)
+		}
+	}
+
 	return locationData, nil
 }
 
 func MapCommand(cfg *Config) error {
-	locationData, err := getLocations(cfg.NextURL)
+	locationData, err := getLocations(cfg, cfg.NextURL)
 	if err != nil {
 		return err
 	}
@@ -60,7 +77,7 @@ func MapBackCommand(cfg *Config) error {
 		return nil
 	}
 
-	locationData, err := getLocations(cfg.PrevURL)
+	locationData, err := getLocations(cfg, cfg.PrevURL)
 	if err != nil {
 		return err
 	}

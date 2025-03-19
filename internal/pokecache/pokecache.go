@@ -16,7 +16,7 @@ type cacheEntry struct {
 	val       []byte
 }
 
-func newCache(expiry time.Duration) *Cache {
+func NewCache(expiry time.Duration) *Cache {
 	cache := &Cache{
 		data:   make(map[string]cacheEntry),
 		expiry: expiry,
