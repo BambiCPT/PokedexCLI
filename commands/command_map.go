@@ -1,4 +1,4 @@
-package main
+package commands
 
 import (
 	"encoding/json"
@@ -23,11 +23,6 @@ type Config struct {
 	PrevURL string
 }
 
-var config = Config{
-	NextURL: "https://pokeapi.co/api/v2/location-area?offset=0&limit=20",
-	PrevURL: "",
-}
-
 func getLocations(URL string) (LocationResponse, error) {
 	var locationData LocationResponse
 	res, err := http.Get(URL)
@@ -44,7 +39,7 @@ func getLocations(URL string) (LocationResponse, error) {
 	return locationData, nil
 }
 
-func mapCommand(cfg *Config) error {
+func MapCommand(cfg *Config) error {
 	locationData, err := getLocations(cfg.NextURL)
 	if err != nil {
 		return err
@@ -59,7 +54,7 @@ func mapCommand(cfg *Config) error {
 	return nil
 }
 
-func mapBackCommand(cfg *Config) error {
+func MapBackCommand(cfg *Config) error {
 	if cfg.PrevURL == "" {
 		fmt.Println("You're on the first page.")
 		return nil
