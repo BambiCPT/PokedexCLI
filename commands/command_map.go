@@ -19,8 +19,8 @@ func MapCommand(cfg *Config) error {
 		return err
 	}
 
-	*cfg.NextURL = locationResp.Next
-	*cfg.PrevURL = locationResp.Previous
+	cfg.NextURL = safeStringPtr(&locationResp.Next)
+	cfg.PrevURL = safeStringPtr(&locationResp.Previous)
 
 	for _, location := range locationResp.Results {
 		fmt.Println(location.Name)
@@ -38,11 +38,19 @@ func MapBackCommand(cfg *Config) error {
 		return err
 	}
 
-	*cfg.NextURL = locationResp.Next
-	*cfg.PrevURL = locationResp.Previous
+	cfg.NextURL = safeStringPtr(&locationResp.Next)
+	cfg.PrevURL = safeStringPtr(&locationResp.Previous)
 
 	for _, location := range locationResp.Results {
 		fmt.Println(location.Name)
 	}
 	return nil
+}
+
+func safeStringPtr(s *string) *string {
+	if s == nil {
+		return nil
+	}
+	str := *s
+	return &str
 }
