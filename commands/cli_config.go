@@ -1,9 +1,17 @@
 package commands
 
+import "github.com/BambiCPT/pokedexcli/internal/pokeapi"
+
 type cliCommand struct {
 	Name        string
 	Description string
 	Callback    func(*Config) error
+}
+
+type Config struct {
+	NextURL *string
+	PrevURL *string
+	Client  *pokeapi.Client
 }
 
 func GetCommands() map[string]cliCommand {

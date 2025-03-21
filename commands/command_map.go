@@ -3,15 +3,7 @@ package commands
 import (
 	"errors"
 	"fmt"
-
-	"github.com/BambiCPT/pokedexcli/internal/pokeapi"
 )
-
-type Config struct {
-	NextURL *string
-	PrevURL *string
-	Client  pokeapi.Client
-}
 
 func MapCommand(cfg *Config) error {
 	locationResp, err := cfg.Client.GetLocations(cfg.NextURL)
