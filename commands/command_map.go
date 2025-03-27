@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func MapCommand(cfg *Config) error {
+func MapCommand(cfg *Config, args ...string) error {
 	locationResp, err := cfg.Client.GetLocations(cfg.NextURL)
 	if err != nil {
 		return err
@@ -20,7 +20,7 @@ func MapCommand(cfg *Config) error {
 	return nil
 }
 
-func MapBackCommand(cfg *Config) error {
+func MapBackCommand(cfg *Config, args ...string) error {
 	if *cfg.PrevURL == "" {
 		return errors.New("you're on the first page")
 	}

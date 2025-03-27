@@ -5,7 +5,7 @@ import "github.com/BambiCPT/pokedexcli/internal/pokeapi"
 type cliCommand struct {
 	Name        string
 	Description string
-	Callback    func(*Config) error
+	Callback    func(*Config, ...string) error
 }
 
 type Config struct {
@@ -35,6 +35,11 @@ func GetCommands() map[string]cliCommand {
 			Name:        "mapb",
 			Description: "Go back to the previous 20 locations",
 			Callback:    MapBackCommand,
+		},
+		"explore": {
+			Name:        "explore",
+			Description: "Explore an area",
+			Callback:    ExploreCommand,
 		},
 	}
 }
